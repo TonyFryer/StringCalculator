@@ -1,7 +1,5 @@
 ﻿using CalculatorService.Exceptions;
 using CalculatorService.Interfaces;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CalculatorService
 {
@@ -39,26 +37,32 @@ namespace CalculatorService
         /// Performs business rule validation on the input string.
         /// </summary>
         /// <param name="addends">A comma-separated string of integers to add together.</param>
-        /// <returns>A string array of the separated values.</returns>
+        /// <returns>A string array of the processed and separated values.</returns>
         /// <exception cref="InvalidOperationException">Thrown when a business rule has been violated.</exception>
         private string[] ValidateInputs(string addends)
         {
             var separators = new string[] { ",", "\\n" };
             var values = addends.Split(separators, StringSplitOptions.None);
 
-            // Test for negative values.
             var negativeValues = new List<string>();
+            var addendValues = new List<string>();
             foreach (var value in values)
             {
-                long.TryParse(value, out long intValue);
+                _ = long.TryParse(value, out long intValue);
+                // Values over 1000 should be considered a zero.
+                if (intValue > 1000)
+                    intValue = 0;
+                // Make a clean list of values to add. Invalid values are considered a zero.
+                addendValues.Add(intValue.ToString());
+                // Test for negative values.
                 if (intValue < 0)
-                    negativeValues.Add(value);
+                    negativeValues.Add(intValue.ToString());
             }
 
             if (negativeValues.Count > 0) 
                 throw new NegativeValueException($"Values cannot include negative numbers. Invalid values: {string.Join(",", negativeValues)}");
 
-            return values;
+            return addendValues.ToArray();
         }
     }
 }
