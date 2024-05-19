@@ -23,9 +23,9 @@ namespace CalculatorService
         public string Add(string addends)
         {
             var values = ValidateInputs(addends);
-            var sum = 0;
+            var sum = 0m;
             foreach (var value in values) 
-                if (int.TryParse(value, out int intValue))
+                if (long.TryParse(value, out long intValue))
                     sum += intValue;
 
             return sum.ToString();

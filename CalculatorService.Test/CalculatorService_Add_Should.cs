@@ -23,12 +23,13 @@ namespace CalculatorService.Test
         }
 
         [TestMethod]
-        [DataRow("20,1", "21")]
-        [DataRow("22,22", "44")]
-        [DataRow("5,-1", "4")]
-        [DataRow("0,0", "0")]
-        [DataRow("0,-1", "-1")]
-        [DataRow("0,", "0")]
+        [DataRow("20,1", "21", DisplayName = "Should add two integers.")]
+        [DataRow("5,-1", "4", DisplayName = "Should handle negative numbers.")]
+        [DataRow("0,0", "0", DisplayName = "Should handle two zeroes.")]
+        [DataRow("0,-1", "-1", DisplayName = "Should handle zeroes and negatives.")]
+        [DataRow("0,", "0", DisplayName = "Should handle missing integers.")]
+        [DataRow("5,2.66", "5", DisplayName = "Should ignore decimals.")]
+        [DataRow("1,8739875934784", "8739875934785", DisplayName = "Should handle larger than int32.")]
         public void ReturnSumOfTwoAddends(string addends, string expectedSum)
         {
             _calculatorService?.Add(addends).Should()

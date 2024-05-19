@@ -1,23 +1,31 @@
-﻿Console.WriteLine("Hello, I am a calculator application.");
-Console.WriteLine("Please press Cntrl-C to stop this application.");
-Console.WriteLine(Environment.NewLine);
+﻿Console.CancelKeyPress += (sender, e) =>
+{
+    e.Cancel = true;
+    Console.WriteLine("Control-C was pressed, terminating application.");
+    Environment.Exit(0);
+};
+
+Console.WriteLine("Hello, I am a calculator application.");
+Console.WriteLine("Please press Ctrl-C to stop this application.");
+Console.WriteLine("--------------------------------------------------------------");
 
 var calculatorService = new CalculatorService.CalculatorService();
 Console.WriteLine(calculatorService.FunctionalityDescription);
+Console.WriteLine("--------------------------------------------------------------");
 
-var stopApplication = false;
-while (!stopApplication)
+while (true)
 {
     try
     {
+        Console.WriteLine("Enter values for addition...");
         var addends = Console.ReadLine();
         var sum = calculatorService.Add(addends);
         Console.WriteLine($"The sum is {sum}");
-        Console.WriteLine(Environment.NewLine);
+        Console.WriteLine();
     }
     catch (Exception e)
     {
         Console.WriteLine($"ERROR: {e.Message}");
-        Console.WriteLine(Environment.NewLine);
+        Console.WriteLine();
     }
 }
