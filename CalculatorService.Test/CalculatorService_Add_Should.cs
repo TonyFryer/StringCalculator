@@ -31,6 +31,7 @@ namespace CalculatorService.Test
         [DataRow("0,", "0", DisplayName = "Should handle missing integers.")]
         [DataRow("5,2.66", "5", DisplayName = "Should ignore decimals.")]
         [DataRow("1,8739875934784", "8739875934785", DisplayName = "Should handle larger than int32.")]
+        [DataRow("1\\n1,1", "3", DisplayName = "Should handle newline character as alternate separator.'")]
         public void ReturnSumOfTwoAddends(string addends, string expectedSum)
         {
             _calculatorService?.Add(addends).Should()

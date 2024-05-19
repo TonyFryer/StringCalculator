@@ -39,11 +39,8 @@ namespace CalculatorService
         /// <exception cref="InvalidOperationException">Thrown when a business rule has been violated.</exception>
         private string[] ValidateInputs(string addends)
         {
-            var values = addends.Split(',');
-            //if (values.Length > 2) // Could use FluentValidator, but that feels like overkill for this scenario.
-            //    throw new InvalidOperationException("The input cannot exceed two values to add.");
-
-            return values;
+            var separators = new string[] { ",", "\\n" };
+            return addends.Split(separators, StringSplitOptions.None);
         }
     }
 }
