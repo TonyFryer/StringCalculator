@@ -32,7 +32,7 @@ namespace CalculatorService.Test
         [DataRow("1,8739875934784", "1+0 = 1", DisplayName = "Should handle larger than int32.")]
         [DataRow("1,1000,1001", "1+1000+0 = 1001", DisplayName = "Should treat values greater than 1000 as zero.")]
         [DataRow("1\\n1,1", "1+1+1 = 3", DisplayName = "Should handle newline character as alternate separator.'")]
-        public void ReturnSumOfTwoAddends(string addends, string expectedSum)
+        public void ReturnSumOfTwoOrMoreAddends(string addends, string expectedSum)
         {
             _calculatorService?.Add(addends).Should()
                 .NotBeNullOrEmpty("The equation/sum was null or empty.")
@@ -72,6 +72,26 @@ namespace CalculatorService.Test
                 .NotBeNullOrEmpty("The equation/sum was null or empty.")
                 .And.BeEquivalentTo("20+0 = 20", "The equation/sum was not what was expected.")
                 ;
+        }
+
+        [TestMethod]
+        [DataRow("//!\\n20,1!3", "20+1+3 = 24", DisplayName = "Should support '!' as a delimiter.")]
+        [DataRow("//6\\n20,163", "20+1+3 = 24", DisplayName = "Should a number as a delimiter.")]
+        [DataRow("//*\\n20,1*3\\n6", "20+1+3+6 = 30", DisplayName = "Should not confuse number separator from newline delimiters.")]
+        public void SupportCustomDelimiters(string addends, string expectedSum)
+        {
+            _calculatorService?.Add(addends).Should()
+                .NotBeNullOrEmpty("The equation/sum was null or empty.")
+                .And.BeEquivalentTo(expectedSum, $"The equation/sum for `{addends}` was not what was expected.")
+                ;
+        }
+
+        [TestMethod]
+        public void ThrowExceptionWhenPoorlyFormedCustomDelimiter()
+        {
+            Action act = () => _calculatorService?.Add("//\\n4,5,6");
+            act.Should().Throw<InvalidInputException>()
+                .Where(e => e.Message.Contains("Custom delimiter declaration was invalid."));
         }
     }
 }
