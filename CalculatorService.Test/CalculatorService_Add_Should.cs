@@ -25,9 +25,7 @@ namespace CalculatorService.Test
         [TestMethod]
         [DataRow("20,1", "21", DisplayName = "Should add two integers.")]
         [DataRow("20,1,11,6", "38", DisplayName = "Should add more than two integers.")]
-        [DataRow("5,-1", "4", DisplayName = "Should handle negative numbers.")]
         [DataRow("0,0", "0", DisplayName = "Should handle two zeroes.")]
-        [DataRow("0,-1", "-1", DisplayName = "Should handle zeroes and negatives.")]
         [DataRow("0,", "0", DisplayName = "Should handle missing integers.")]
         [DataRow("5,2.66", "5", DisplayName = "Should ignore decimals.")]
         [DataRow("1,8739875934784", "8739875934785", DisplayName = "Should handle larger than int32.")]
@@ -46,6 +44,14 @@ namespace CalculatorService.Test
         {
             Action act = () => _calculatorService?.Add("20,1,3");
             act.Should().Throw<InvalidOperationException>();
+        }
+
+        [TestMethod]
+        public void ThrowExceptionWhenNegativeNumbersPresent()
+        {
+            Action act = () => _calculatorService?.Add("20,-1,-3");
+            act.Should().Throw<InvalidOperationException>()
+                .Where(e => e.Message.Contains("-1,-3"));
         }
 
         [TestMethod]

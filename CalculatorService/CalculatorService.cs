@@ -1,4 +1,6 @@
 ﻿using CalculatorService.Interfaces;
+using System.Collections.Generic;
+using System.Text;
 
 namespace CalculatorService
 {
@@ -12,7 +14,8 @@ namespace CalculatorService
         /// </summary>
         public string FunctionalityDescription
         {
-            get { return "To use the Add function, please type two, whole, comma-separated numbers (example: '5,5') and press enter. Other values will be treated as zero value."; }
+            get { return "To use the Add function, please type two, whole, comma-separated numbers (example: '5,5') and press enter. Other values will be treated as zero value. " +
+                    "Negative values are not allowed. Note: The newline character (\\n) is allowed as an alternate separator."; }
         }
 
         /// <summary>
@@ -40,7 +43,21 @@ namespace CalculatorService
         private string[] ValidateInputs(string addends)
         {
             var separators = new string[] { ",", "\\n" };
-            return addends.Split(separators, StringSplitOptions.None);
+            var values = addends.Split(separators, StringSplitOptions.None);
+
+            // Test for negative values.
+            var negativeValues = new List<string>();
+            foreach (var value in values)
+            {
+                long.TryParse(value, out long intValue);
+                if (intValue < 0)
+                    negativeValues.Add(value);
+            }
+
+            if (negativeValues.Count > 0) 
+                throw new InvalidOperationException($"Values cannot include negative numbers. Invalid values: {String.Join(",", negativeValues)}");
+
+            return values;
         }
     }
 }
