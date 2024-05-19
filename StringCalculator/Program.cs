@@ -19,8 +19,8 @@ while (true)
     {
         Console.WriteLine("Enter values for addition...");
         var addends = Console.ReadLine();
-        var sum = calculatorService.Add(addends);
-        Console.WriteLine($"The sum is {sum}");
+        var equation = calculatorService.Add(addends);
+        Console.WriteLine(equation);
         Console.WriteLine();
     }
     catch (Exception e)

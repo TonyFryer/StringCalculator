@@ -18,25 +18,25 @@ namespace CalculatorService.Test
         public void ReturnSumOfOneAddend()
         {
             _calculatorService?.Add("20").Should()
-                .NotBeNullOrEmpty("The sum was null or empty.")
-                .And.BeEquivalentTo("20", "The sum was not what was expected.")
+                .NotBeNullOrEmpty("The equation/sum was null or empty.")
+                .And.BeEquivalentTo("20 = 20", "The equation/sum was not what was expected.")
                 ;
         }
 
         [TestMethod]
-        [DataRow("20,1", "21", DisplayName = "Should add two integers.")]
-        [DataRow("20,1,11,6", "38", DisplayName = "Should add more than two integers.")]
-        [DataRow("0,0", "0", DisplayName = "Should handle two zeroes.")]
-        [DataRow("0,", "0", DisplayName = "Should handle missing integers.")]
-        [DataRow("5,2.66", "5", DisplayName = "Should ignore decimals.")]
-        [DataRow("1,8739875934784", "1", DisplayName = "Should handle larger than int32.")]
-        [DataRow("1,1000,1001", "1001", DisplayName = "Should treat values greater than 1000 as zero.")]
-        [DataRow("1\\n1,1", "3", DisplayName = "Should handle newline character as alternate separator.'")]
+        [DataRow("20,1", "20+1 = 21", DisplayName = "Should add two integers.")]
+        [DataRow("20,1,11,6", "20+1+11+6 = 38", DisplayName = "Should add more than two integers.")]
+        [DataRow("0,0", "0+0 = 0", DisplayName = "Should handle two zeroes.")]
+        [DataRow("0,", "0+0 = 0", DisplayName = "Should handle missing integers.")]
+        [DataRow("5,2.66", "5+0 = 5", DisplayName = "Should ignore decimals.")]
+        [DataRow("1,8739875934784", "1+0 = 1", DisplayName = "Should handle larger than int32.")]
+        [DataRow("1,1000,1001", "1+1000+0 = 1001", DisplayName = "Should treat values greater than 1000 as zero.")]
+        [DataRow("1\\n1,1", "1+1+1 = 3", DisplayName = "Should handle newline character as alternate separator.'")]
         public void ReturnSumOfTwoAddends(string addends, string expectedSum)
         {
             _calculatorService?.Add(addends).Should()
-                .NotBeNullOrEmpty("The sum was null or empty.")
-                .And.BeEquivalentTo(expectedSum, $"The sum for `{addends}` was not what was expected.")
+                .NotBeNullOrEmpty("The equation/sum was null or empty.")
+                .And.BeEquivalentTo(expectedSum, $"The equation/sum for `{addends}` was not what was expected.")
                 ;
         }
 
@@ -60,8 +60,8 @@ namespace CalculatorService.Test
         public void ConvertMissingAddendsToZero()
         {
             _calculatorService?.Add(string.Empty).Should()
-                .NotBeNullOrEmpty("The sum was null or empty.")
-                .And.BeEquivalentTo("0", "The sum was not what was expected.")
+                .NotBeNullOrEmpty("The equation/sum was null or empty.")
+                .And.BeEquivalentTo("0 = 0", "The equation/sum was not what was expected.")
                 ;
         }
 
@@ -69,8 +69,8 @@ namespace CalculatorService.Test
         public void ConvertInvalidAddendsToZero()
         {
             _calculatorService?.Add("20,ABC123").Should()
-                .NotBeNullOrEmpty("The sum was null or empty.")
-                .And.BeEquivalentTo("20", "The sum was not what was expected.")
+                .NotBeNullOrEmpty("The equation/sum was null or empty.")
+                .And.BeEquivalentTo("20+0 = 20", "The equation/sum was not what was expected.")
                 ;
         }
     }

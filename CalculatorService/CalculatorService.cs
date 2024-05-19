@@ -1,5 +1,6 @@
 ﻿using CalculatorService.Exceptions;
 using CalculatorService.Interfaces;
+using System.Linq;
 
 namespace CalculatorService
 {
@@ -30,7 +31,8 @@ namespace CalculatorService
                 if (long.TryParse(value, out long intValue))
                     sum += intValue;
 
-            return sum.ToString();
+            var equation = $"{string.Join("+", values)} = {sum.ToString()}";
+            return equation;
         }
 
         /// <summary>
