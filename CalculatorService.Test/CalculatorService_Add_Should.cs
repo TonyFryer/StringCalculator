@@ -24,6 +24,7 @@ namespace CalculatorService.Test
 
         [TestMethod]
         [DataRow("20,1", "21", DisplayName = "Should add two integers.")]
+        [DataRow("20,1,11,6", "38", DisplayName = "Should add more than two integers.")]
         [DataRow("5,-1", "4", DisplayName = "Should handle negative numbers.")]
         [DataRow("0,0", "0", DisplayName = "Should handle two zeroes.")]
         [DataRow("0,-1", "-1", DisplayName = "Should handle zeroes and negatives.")]
@@ -39,6 +40,7 @@ namespace CalculatorService.Test
         }
 
         [TestMethod]
+        [Ignore] // This test is obsolete given business requirement #2.
         public void ThrowExceptionWhenMoreThanTwoAddends()
         {
             Action act = () => _calculatorService?.Add("20,1,3");

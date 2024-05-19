@@ -40,8 +40,8 @@ namespace CalculatorService
         private string[] ValidateInputs(string addends)
         {
             var values = addends.Split(',');
-            if (values.Length > 2) // Could use FluentValidator, but that feels like overkill for this scenario.
-                throw new InvalidOperationException("The input cannot exceed two values to add.");
+            //if (values.Length > 2) // Could use FluentValidator, but that feels like overkill for this scenario.
+            //    throw new InvalidOperationException("The input cannot exceed two values to add.");
 
             return values;
         }
