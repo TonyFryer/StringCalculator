@@ -1,3 +1,4 @@
+using CalculatorService.Exceptions;
 using FluentAssertions;
 
 namespace CalculatorService.Test
@@ -50,7 +51,7 @@ namespace CalculatorService.Test
         public void ThrowExceptionWhenNegativeNumbersPresent()
         {
             Action act = () => _calculatorService?.Add("20,-1,-3");
-            act.Should().Throw<InvalidOperationException>()
+            act.Should().Throw<NegativeValueException>()
                 .Where(e => e.Message.Contains("-1,-3"));
         }
 

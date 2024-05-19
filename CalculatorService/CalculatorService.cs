@@ -1,4 +1,5 @@
-﻿using CalculatorService.Interfaces;
+﻿using CalculatorService.Exceptions;
+using CalculatorService.Interfaces;
 using System.Collections.Generic;
 using System.Text;
 
@@ -55,7 +56,7 @@ namespace CalculatorService
             }
 
             if (negativeValues.Count > 0) 
-                throw new InvalidOperationException($"Values cannot include negative numbers. Invalid values: {String.Join(",", negativeValues)}");
+                throw new NegativeValueException($"Values cannot include negative numbers. Invalid values: {string.Join(",", negativeValues)}");
 
             return values;
         }
