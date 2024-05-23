@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CalculatorService.Exceptions
+﻿namespace CalculatorService.Exceptions
 {
+    /// <summary>
+    /// Exception thrown by CalculatorService if errors are encountered due to user input.
+    /// </summary>
     public class InvalidInputException : Exception
     {
         public InvalidInputException() : base() { }

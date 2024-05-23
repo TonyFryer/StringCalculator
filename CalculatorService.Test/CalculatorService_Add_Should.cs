@@ -31,7 +31,7 @@ namespace CalculatorService.Test
         [DataRow("5,2.66", "5+0 = 5", DisplayName = "Should ignore decimals.")]
         [DataRow("1,8739875934784", "1+0 = 1", DisplayName = "Should handle larger than int32.")]
         [DataRow("1,1000,1001", "1+1000+0 = 1001", DisplayName = "Should treat values greater than 1000 as zero.")]
-        [DataRow("1\\n1,1", "1+1+1 = 3", DisplayName = "Should handle newline character as alternate separator.'")]
+        [DataRow(@"1\n1,1", "1+1+1 = 3", DisplayName = "Should handle newline character as alternate separator.'")]
         public void ReturnSumOfTwoOrMoreAddends(string addends, string expectedSum)
         {
             _calculatorService?.Add(addends).Should()
@@ -75,10 +75,22 @@ namespace CalculatorService.Test
         }
 
         [TestMethod]
-        [DataRow("//!\\n20,1!3", "20+1+3 = 24", DisplayName = "Should support '!' as a delimiter.")]
-        [DataRow("//6\\n20,163", "20+1+3 = 24", DisplayName = "Should a number as a delimiter.")]
-        [DataRow("//*\\n20,1*3\\n6", "20+1+3+6 = 30", DisplayName = "Should not confuse number separator from newline delimiters.")]
-        public void SupportCustomDelimiters(string addends, string expectedSum)
+        [DataRow(@"//!\n20,1!3", "20+1+3 = 24", DisplayName = "Should support '!' as a delimiter.")]
+        [DataRow(@"//6\n20,163", "20+1+3 = 24", DisplayName = "Should a number as a delimiter.")]
+        [DataRow(@"//*\n20,1*3\n6", "20+1+3+6 = 30", DisplayName = "Should not confuse number separator from newline delimiters.")]
+        public void SupportSingleCustomDelimiters(string addends, string expectedSum)
+        {
+            _calculatorService?.Add(addends).Should()
+                .NotBeNullOrEmpty("The equation/sum was null or empty.")
+                .And.BeEquivalentTo(expectedSum, $"The equation/sum for `{addends}` was not what was expected.")
+                ;
+        }
+
+        [TestMethod]
+        [DataRow(@"//[*][!!][r9r]\n11r9r22*hh*33!!44", "11+22+0+33+44 = 110", DisplayName = "Should support '* and !! and r9r' as delimiters.")]
+        [DataRow(@"//[**][[]\n11**22[hh[33,44", "11+22+0+33+44 = 110", DisplayName = "Should support '** and [' as delimiters.")]
+        [DataRow(@"//[ ]\n11 22 33 44", "11+22+33+44 = 110", DisplayName = "Should support ' ' as delimiters.")]
+        public void SupportMultipleCustomDelimiters(string addends, string expectedSum)
         {
             _calculatorService?.Add(addends).Should()
                 .NotBeNullOrEmpty("The equation/sum was null or empty.")

@@ -1,5 +1,6 @@
 ﻿using CalculatorService.Exceptions;
 using CalculatorService.Interfaces;
+using System.Text.RegularExpressions;
 
 namespace CalculatorService
 {
@@ -14,8 +15,9 @@ namespace CalculatorService
         public string FunctionalityDescription
         {
             get { return "To use the Add function, please type two, whole, comma-separated numbers (example: '5,5') and press enter. Other values will be treated as zero value. " +
-                    "Negative values are not allowed. Note: The newline character (\\n) is allowed as an alternate separator. Custom, single-character separators can be declared " +
-                    "using this syntax: //{delimiter}\n{numbers}"; }
+                    @"Negative values are not allowed. Note: The newline character (\n) is allowed as an alternate separator. Custom, single-character separators can be declared " +
+                    @"using this syntax: //{delimiter}\n{numbers}. Additionally, multiple custom delimiters of various length can be provided using this format: //[{delimiter}]...\n{numbers}." +
+                    @"Example: //[*][!!][r9r]\n11r9r22*hh*33!!44"; }
         }
 
         /// <summary>
@@ -76,7 +78,9 @@ namespace CalculatorService
         }
 
         /// <summary>
-        /// A single-character, custom delimiter can be provided using this format: //{delimiter}\n{numbers}.
+        /// A single-character, custom delimiter can be provided using this format: //{delimiter}\n{numbers}. Additionally, 
+        /// multiple custom delimiters of various length can be provided using this format: //[{delimiter}]...\n{numbers}.
+        /// Example: //[*][!!][r9r]\n11r9r22*hh*33!!44
         /// </summary>
         /// <param name="addends">The user input value to be processed.</param>
         /// <returns>A string array of delimiters.</returns>
@@ -88,9 +92,21 @@ namespace CalculatorService
             {
                 try
                 {
-                    // We're taking a single character as the custom delimiter. 
-                    var customDelimiter = addends.Split("\\n").First().Substring(2, 1).Single().ToString();
-                    separators.Add(customDelimiter);
+                    // Let's first determine if we have one or more custom delimiters, which are of any length.
+                    Regex regex = new Regex(@"\[(.*?)\]");
+                    MatchCollection matches = regex.Matches(addends);
+                    if (matches.Count > 0) 
+                    {
+                        MatchCollection delimiterMatches = regex.Matches(addends.Split("\\n").First());
+                        foreach (Match match in matches)
+                            separators.Add(match.Groups[1].Value);
+                    }
+                    else
+                    {
+                        // We're taking a single character as the custom delimiter. 
+                        var customDelimiter = addends.Split("\\n").First().Substring(2, 1).Single().ToString();
+                        separators.Add(customDelimiter);
+                    }
                 }
                 catch (ArgumentOutOfRangeException aor)
                 {
